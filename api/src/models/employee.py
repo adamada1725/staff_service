@@ -4,7 +4,7 @@ from sqlalchemy import String, Date, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-from database import Base
+from src.database import Base
 
 class Country(Base):
     __tablename__ = "country"
