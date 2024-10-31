@@ -1,4 +1,5 @@
 from datetime import date
+from typing import List
 
 from sqlalchemy import String, Date, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -25,7 +26,7 @@ class Department(Base):
     acting_head_id: Mapped[int] = mapped_column(ForeignKey("employees.id", use_alter=True, ondelete="CASCADE"))
     acting_head: Mapped["Employee"] = relationship(back_populates="employees")
 
-    employees: Mapped[list["Employee"]] = relationship(back_populates="employees")
+    employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
 
 class Sex(Base):
     __tablename__ = "sex"
@@ -34,7 +35,7 @@ class Sex(Base):
 
     title: Mapped[str] = mapped_column(String(32), unique=True)
 
-    employees: Mapped[list["Employee"]] = relationship(back_populates="employees")
+    employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
 
 class Position(Base):
     __tablename__ = "positions"
@@ -43,7 +44,7 @@ class Position(Base):
 
     title: Mapped[str] = mapped_column(String(64), unique=True)
 
-    employees: Mapped[list["Employee"]] = relationship(back_populates="employees")
+    employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
 
 class Employment_type(Base):
     __tablename__ = "employment_types"
@@ -52,7 +53,7 @@ class Employment_type(Base):
 
     title: Mapped[str] = mapped_column(String(64), unique=True)
 
-    employees: Mapped[list["Employee"]] = relationship(back_populates="employees")
+    employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
 
 class Employee(Base):
     __tablename__ = "employees"
@@ -90,9 +91,9 @@ class Employee(Base):
 
     positions: Mapped["EmployeePosition"] = relationship(back_populates="employee_positions")
 
-    business_trips: Mapped[list["BusinessTrip"]] = relationship(back_populates="business_trips")
+    business_trips: Mapped[List["BusinessTrip"]] = relationship(back_populates="business_trips")
 
-    vacation: Mapped[list["Vacation"]] = relationship(back_populates="vacations")
+    vacation: Mapped[List["Vacation"]] = relationship(back_populates="vacations")
 
 class EmployeePosition(Base):
     __tablename__ = "employee_positions"
