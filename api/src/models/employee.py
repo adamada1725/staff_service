@@ -1,5 +1,5 @@
 from datetime import date
-from typing import List
+from typing import List, Union
 
 from sqlalchemy import String, Date, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -63,14 +63,14 @@ class Employee(Base):
     country_id: Mapped[int] = mapped_column(ForeignKey("countries.id", use_alter=True, ondelete="CASCADE"))
     country: Mapped[Country] = relationship(back_populates="countries")
     
-    department_id: Mapped[int|None] = mapped_column(ForeignKey("departments.id", use_alter=True, ondelete="CASCADE"))
+    department_id: Mapped[Union[int,None]] = mapped_column(ForeignKey("departments.id", use_alter=True, ondelete="CASCADE"))
     department: Mapped["Department"] = relationship(back_populates="departments")
 
     first_name: Mapped[str] = mapped_column(String(32))
 
-    last_name: Mapped[str|None] = mapped_column(String(64))
+    last_name: Mapped[Union[str,None]] = mapped_column(String(64))
 
-    middle_name: Mapped[str|None] = mapped_column(String(32))
+    middle_name: Mapped[Union[str,None]] = mapped_column(String(32))
     
     sex_id: Mapped[int]
 
@@ -78,16 +78,16 @@ class Employee(Base):
 
     password: Mapped[str] = mapped_column(String(32))
 
-    email: Mapped[str|None] = mapped_column(String(64), unique=True)
+    email: Mapped[Union[str,None]] = mapped_column(String(64), unique=True)
 
-    phone: Mapped[str|None] = mapped_column(String(16), unique=True)
+    phone: Mapped[Union[str,None]] = mapped_column(String(16), unique=True)
 
     employment_type_id: Mapped[int] = mapped_column(ForeignKey("employment_types.id", use_alter=True, ondelete="CASCADE"))
     employment_type: Mapped[Employment_type] = relationship(back_populates="employment_types")
 
     created_at: Mapped[date] = mapped_column(Date, server_default=func.now())
 
-    deleted_at: Mapped[date|None] = mapped_column(Date)
+    deleted_at: Mapped[Union[date,None]] = mapped_column(Date)
 
     positions: Mapped["EmployeePosition"] = relationship(back_populates="employee_positions")
 
@@ -120,7 +120,7 @@ class BusinessTrip(Base):
 
     resaon: Mapped[str] = mapped_column(String(256))
 
-    deleted_at: Mapped[date|None] = mapped_column(Date)
+    deleted_at: Mapped[Union[date,None]] = mapped_column(Date)
 
 class VacationType(Base):
     __tablename__ = "vacation_types"
