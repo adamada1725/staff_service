@@ -1,11 +1,10 @@
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
-from sqlalchemy.ext.declarative import declared_attr
 
 from src.config import settings
 
-engine = create_engine(
-    url=settings.DATABASE_URL_psycopg,
+engine = create_async_engine(
+    url=settings.DATABASE_URL_asyncpg,
     echo=True
     )
 
