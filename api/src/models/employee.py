@@ -13,7 +13,7 @@ class Country(Base):
     
     title: Mapped[str] = mapped_column(String(32), unique=True)
     
-    employees: Mapped["Employee"] = relationship(back_populates="employee")
+    employees: Mapped["Employee"] = relationship(back_populates="employees")
 
 class Department(Base):
     __tablename__ = "departments"
@@ -34,7 +34,7 @@ class Sex(Base):
 
     title: Mapped[str] = mapped_column(String(32), unique=True)
 
-    employees: Mapped[list["Employee"]] = relationship(back_populates="employee")
+    employees: Mapped[list["Employee"]] = relationship(back_populates="employees")
 
 class Position(Base):
     __tablename__ = "positions"
@@ -43,7 +43,7 @@ class Position(Base):
 
     title: Mapped[str] = mapped_column(String(64), unique=True)
 
-    employees: Mapped[list["Employee"]] = relationship(back_populates="employee")
+    employees: Mapped[list["Employee"]] = relationship(back_populates="employees")
 
 class Employment_type(Base):
     __tablename__ = "employment_types"
@@ -52,15 +52,15 @@ class Employment_type(Base):
 
     title: Mapped[str] = mapped_column(String(64), unique=True)
 
-    employees: Mapped[list["Employee"]] = relationship(back_populates="employee")
+    employees: Mapped[list["Employee"]] = relationship(back_populates="employees")
 
 class Employee(Base):
     __tablename__ = "employees"
     
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     
-    country_id: Mapped[int] = mapped_column(ForeignKey(Country.id, use_alter=True, ondelete="CASCADE"))
-    country: Mapped[Country] = relationship(back_populates=Country)
+    country_id: Mapped[int] = mapped_column(ForeignKey("countries.id", use_alter=True, ondelete="CASCADE"))
+    country: Mapped[Country] = relationship(back_populates="countries")
     
     department_id: Mapped[int|None] = mapped_column(ForeignKey("departments.id", use_alter=True, ondelete="CASCADE"))
     department: Mapped["Department"] = relationship(back_populates="departments")
@@ -81,24 +81,24 @@ class Employee(Base):
 
     phone: Mapped[str|None] = mapped_column(String(16), unique=True)
 
-    employment_type_id: Mapped[int] = mapped_column(ForeignKey(Employment_type.id, use_alter=True, ondelete="CASCADE"))
-    employment_type: Mapped[Employment_type] = relationship(back_populates=Employment_type)
+    employment_type_id: Mapped[int] = mapped_column(ForeignKey("employment_types.id", use_alter=True, ondelete="CASCADE"))
+    employment_type: Mapped[Employment_type] = relationship(back_populates="employment_types")
 
     created_at: Mapped[date] = mapped_column(Date, server_default=func.now())
 
     deleted_at: Mapped[date|None] = mapped_column(Date)
 
-    positions: Mapped["EmployeePosition"] = relationship(back_populates="EmployeePosition")
+    positions: Mapped["EmployeePosition"] = relationship(back_populates="employee_positions")
 
-    business_trips: Mapped[list["BusinessTrip"]] = relationship(back_populates="BusinessTrip")
+    business_trips: Mapped[list["BusinessTrip"]] = relationship(back_populates="business_trips")
 
-    vacation: Mapped[list["Vacation"]] = relationship(back_populates="Vacation")
+    vacation: Mapped[list["Vacation"]] = relationship(back_populates="vacations")
 
 class EmployeePosition(Base):
     __tablename__ = "employee_positions"
 
-    employee_id: Mapped[int] = mapped_column(ForeignKey(Employee.id, ondelete="CASCADE"), primary_key=True)
-    position_id: Mapped[int] = mapped_column(ForeignKey(Position.id, ondelete="CASCADE"), primary_key=True)
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id", ondelete="CASCADE"), primary_key=True)
+    position_id: Mapped[int] = mapped_column(ForeignKey("employees.id", ondelete="CASCADE"), primary_key=True)
 
 class BusinessTrip(Base):
 
@@ -108,8 +108,8 @@ class BusinessTrip(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    employee_id: Mapped[int] = mapped_column(ForeignKey(Employee.id, ondelete="CASCADE"))
-    employee: Mapped[Employee] = relationship(back_populates="employee.id")
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id", ondelete="CASCADE"))
+    employee: Mapped[Employee] = relationship(back_populates="employees")
 
     start_date: Mapped[date] = mapped_column(Date, server_default=func.now())
 
@@ -136,13 +136,13 @@ class Vacation(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
-    employee_id: Mapped[int] = mapped_column(ForeignKey(Employee.id))
-    employee: Mapped[Employee] = relationship(back_populates="Employee.id")
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"))
+    employee: Mapped[Employee] = relationship(back_populates="employees")
 
     start_date: Mapped[date] = mapped_column(Date, server_default=func.now())
 
     end_date: Mapped[date] = mapped_column(Date)
 
-    resaon: Mapped[str] = mapped_column(String(256))
+    reason: Mapped[str] = mapped_column(String(256))
 
-    vacation_type_id: Mapped[int] = mapped_column(ForeignKey(VacationType.id))
+    vacation_type_id: Mapped[int] = mapped_column(ForeignKey("vacation_types.id"))
