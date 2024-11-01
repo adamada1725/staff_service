@@ -1,8 +1,8 @@
 from datetime import date
-from typing import List, Union
+from typing import List, Optional
 
 from sqlalchemy import String, Date, ForeignKey
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from src.database import Base
@@ -13,8 +13,6 @@ class Country(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     
     title: Mapped[str] = mapped_column(String(32), unique=True)
-    
-    employees: Mapped["Employee"] = relationship(back_populates="employees")
 
 class Department(Base):
     __tablename__ = "departments"
@@ -37,8 +35,8 @@ class Sex(Base):
 
     employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
 
-class Position(Base):
-    __tablename__ = "positions"
+class EmployeePosition(Base):
+    __tablename__ = "employee_positions"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
 
@@ -46,7 +44,7 @@ class Position(Base):
 
     employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
 
-class Employment_type(Base):
+class EmploymentType(Base):
     __tablename__ = "employment_types"
     
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -63,14 +61,14 @@ class Employee(Base):
     country_id: Mapped[int] = mapped_column(ForeignKey("countries.id", use_alter=True, ondelete="CASCADE"))
     country: Mapped[Country] = relationship(back_populates="countries")
     
-    department_id: Mapped[Union[int,None]] = mapped_column(ForeignKey("departments.id", use_alter=True, ondelete="CASCADE"))
+    department_id: Mapped[Optional[int]] = mapped_column(ForeignKey("departments.id", use_alter=True, ondelete="CASCADE"))
     department: Mapped["Department"] = relationship(back_populates="departments")
 
     first_name: Mapped[str] = mapped_column(String(32))
 
-    last_name: Mapped[Union[str,None]] = mapped_column(String(64))
+    last_name: Mapped[Optional[str]] = mapped_column(String(64))
 
-    middle_name: Mapped[Union[str,None]] = mapped_column(String(32))
+    middle_name: Mapped[Optional[str]] = mapped_column(String(32))
     
     sex_id: Mapped[int]
 
@@ -78,16 +76,16 @@ class Employee(Base):
 
     password: Mapped[str] = mapped_column(String(32))
 
-    email: Mapped[Union[str,None]] = mapped_column(String(64), unique=True)
+    email: Mapped[Optional[str]] = mapped_column(String(64), unique=True)
 
-    phone: Mapped[Union[str,None]] = mapped_column(String(16), unique=True)
+    phone: Mapped[Optional[str]] = mapped_column(String(16), unique=True)
 
     employment_type_id: Mapped[int] = mapped_column(ForeignKey("employment_types.id", use_alter=True, ondelete="CASCADE"))
-    employment_type: Mapped[Employment_type] = relationship(back_populates="employment_types")
+    employment_type: Mapped[EmploymentType] = relationship(back_populates="employment_types")
 
     created_at: Mapped[date] = mapped_column(Date, server_default=func.now())
 
-    deleted_at: Mapped[Union[date,None]] = mapped_column(Date)
+    deleted_at: Mapped[Optional[date]] = mapped_column(Date)
 
     positions: Mapped["EmployeePosition"] = relationship(back_populates="employee_positions")
 
@@ -95,11 +93,13 @@ class Employee(Base):
 
     vacation: Mapped[List["Vacation"]] = relationship(back_populates="vacations")
 
-class EmployeePosition(Base):
-    __tablename__ = "employee_positions"
+class EmployeeEmployeePosition(Base):
+    __tablename__ = "employee__employee_positions"
 
-    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id", ondelete="CASCADE"), primary_key=True)
-    position_id: Mapped[int] = mapped_column(ForeignKey("employees.id", ondelete="CASCADE"), primary_key=True)
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id", use_alter=True, ondelete="CASCADE"), 
+                                             primary_key=True)
+    position_id: Mapped[int] = mapped_column(ForeignKey("employee_positions.id", use_alter=True, ondelete="CASCADE"), 
+                                             primary_key=True)
 
 class BusinessTrip(Base):
 
@@ -118,9 +118,9 @@ class BusinessTrip(Base):
 
     destionation_city: Mapped[str] = mapped_column(String(128))
 
-    resaon: Mapped[str] = mapped_column(String(256))
+    reason: Mapped[str] = mapped_column(String(256))
 
-    deleted_at: Mapped[Union[date,None]] = mapped_column(Date)
+    deleted_at: Mapped[Optional[date]] = mapped_column(Date)
 
 class VacationType(Base):
     __tablename__ = "vacation_types"
