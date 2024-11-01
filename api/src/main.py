@@ -1,4 +1,8 @@
-import models.employee
-from database import Base, engine, session
+from fastapi import FastAPI
 
-#Base.metadata.create_all(engine)
+app = FastAPI()
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
