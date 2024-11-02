@@ -1,4 +1,7 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from asyncio import current_task
+
+from sqlalchemy.ext.asyncio import (create_async_engine, async_sessionmaker, 
+                                    async_scoped_session, AsyncSession)
 from sqlalchemy.orm import DeclarativeBase
 
 from src.config import settings
@@ -8,7 +11,24 @@ engine = create_async_engine(
     echo=settings.ECHO
     )
 
-session = async_sessionmaker(engine)
+session_factory = async_sessionmaker(engine,
+                             autoflush=False,
+                             autocommit=False,
+                             expire_on_commit=False)
+
+def get_scoped_session():
+    sess = async_scoped_session(
+        session_factory = session_factory,
+        scopefunc = current_task
+    )
+    return sess
+
+async def session_dependency():
+    sess = get_scoped_session()
+    try:
+        yield sess
+    finally:
+        await sess.close()
 
 class Base(DeclarativeBase):
     pass
