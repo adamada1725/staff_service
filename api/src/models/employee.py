@@ -1,8 +1,8 @@
 from datetime import date
 from typing import List, Optional
 
-from sqlalchemy import String, Date, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import String, Date, ForeignKey, CheckConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship, declared_attr
 from sqlalchemy.sql import func
 
 from src.database import Base
@@ -101,26 +101,35 @@ class EmployeeEmployeePosition(Base):
     position_id: Mapped[int] = mapped_column(ForeignKey("employee_positions.id", use_alter=True, ondelete="CASCADE"), 
                                              primary_key=True)
 
-class BusinessTrip(Base):
-
-    #TODO: сделать проверку дат
-
-    __tablename__ = "business_trips"
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+#abstract
+class EmployeeTrip(Base):
+    __abstract__ = True
 
     employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id", ondelete="CASCADE"))
-    employee: Mapped[Employee] = relationship(back_populates="employees")
+    
+    @declared_attr
+    def employee(cls) -> Mapped[Employee]:
+        return relationship(back_populates="employees")
 
     start_date: Mapped[date] = mapped_column(Date, server_default=func.now())
 
     end_date: Mapped[date] = mapped_column(Date)
 
-    destionation_city: Mapped[str] = mapped_column(String(128))
-
     reason: Mapped[str] = mapped_column(String(256))
 
     deleted_at: Mapped[Optional[date]] = mapped_column(Date)
+    
+    __table_args__ = (
+        CheckConstraint("start_date <= end_date"),
+    )
+
+class BusinessTrip(EmployeeTrip):
+
+    __tablename__ = "business_trips"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+
+    destionation_city: Mapped[str] = mapped_column(String(128))
 
 class VacationType(Base):
     __tablename__ = "vacation_types"
@@ -129,21 +138,10 @@ class VacationType(Base):
 
     title: Mapped[str] = mapped_column(String(64), unique=True)
 
-class Vacation(Base):
-
-    #TODO: сделать проверку дат
+class Vacation(EmployeeTrip):
 
     __tablename__ = "vacations"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-
-    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"))
-    employee: Mapped[Employee] = relationship(back_populates="employees")
-
-    start_date: Mapped[date] = mapped_column(Date, server_default=func.now())
-
-    end_date: Mapped[date] = mapped_column(Date)
-
-    reason: Mapped[str] = mapped_column(String(256))
 
     vacation_type_id: Mapped[int] = mapped_column(ForeignKey("vacation_types.id"))
