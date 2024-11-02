@@ -1,5 +1,5 @@
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.orm import DeclarativeBase
 
 from src.config import settings
 
@@ -8,7 +8,7 @@ engine = create_async_engine(
     echo=settings.ECHO
     )
 
-session = sessionmaker(engine)
+session = async_sessionmaker(engine)
 
 class Base(DeclarativeBase):
     pass
