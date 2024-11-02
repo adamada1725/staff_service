@@ -21,10 +21,7 @@ class Department(Base):
 
     title: Mapped[str] = mapped_column(String(64), unique=True)
 
-    acting_head_id: Mapped[int] = mapped_column(ForeignKey("employees.id", use_alter=True, ondelete="CASCADE"))
-    acting_head: Mapped["Employee"] = relationship(back_populates="employees")
-
-    employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
+    employees: Mapped[List["Employee"]] = relationship("Employee")
 
 class Sex(Base):
     __tablename__ = "sex"
@@ -33,7 +30,7 @@ class Sex(Base):
 
     title: Mapped[str] = mapped_column(String(32), unique=True)
 
-    employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
+    employees: Mapped[List["Employee"]] = relationship("Employee")
 
 class EmployeePosition(Base):
     __tablename__ = "employee_positions"
@@ -42,8 +39,6 @@ class EmployeePosition(Base):
 
     title: Mapped[str] = mapped_column(String(64), unique=True)
 
-    employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
-
 class EmploymentType(Base):
     __tablename__ = "employment_types"
     
@@ -51,7 +46,7 @@ class EmploymentType(Base):
 
     title: Mapped[str] = mapped_column(String(64), unique=True)
 
-    employees: Mapped[List["Employee"]] = relationship(back_populates="employees")
+    employees: Mapped[List["Employee"]] = relationship("Employee")
 
 class Employee(Base):
     __tablename__ = "employees"
@@ -59,10 +54,10 @@ class Employee(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     
     country_id: Mapped[int] = mapped_column(ForeignKey("countries.id", use_alter=True, ondelete="CASCADE"))
-    country: Mapped[Country] = relationship(back_populates="countries")
+    country: Mapped[Country] = relationship("Country")
     
     department_id: Mapped[Optional[int]] = mapped_column(ForeignKey("departments.id", use_alter=True, ondelete="CASCADE"))
-    department: Mapped["Department"] = relationship(back_populates="departments")
+    department: Mapped["Department"] = relationship("Department")
 
     first_name: Mapped[str] = mapped_column(String(32))
 
@@ -70,7 +65,7 @@ class Employee(Base):
 
     middle_name: Mapped[Optional[str]] = mapped_column(String(32))
     
-    sex_id: Mapped[int]
+    sex_id: Mapped[int] = mapped_column(ForeignKey("sex.id", use_alter=True, ondelete="CASCADE"))
 
     login: Mapped[str] = mapped_column(String(32), unique=True)
 
@@ -81,17 +76,17 @@ class Employee(Base):
     phone: Mapped[Optional[str]] = mapped_column(String(16), unique=True)
 
     employment_type_id: Mapped[int] = mapped_column(ForeignKey("employment_types.id", use_alter=True, ondelete="CASCADE"))
-    employment_type: Mapped[EmploymentType] = relationship(back_populates="employment_types")
+    employment_type: Mapped[EmploymentType] = relationship("EmploymentType")
 
     created_at: Mapped[date] = mapped_column(Date, server_default=func.now())
 
     deleted_at: Mapped[Optional[date]] = mapped_column(Date)
 
-    positions: Mapped["EmployeePosition"] = relationship(back_populates="employee_positions")
+    positions: Mapped[List["EmployeePosition"]] = relationship("EmployeeEmployeePosition")
 
-    business_trips: Mapped[List["BusinessTrip"]] = relationship(back_populates="business_trips")
+    business_trips: Mapped[List["BusinessTrip"]] = relationship("BusinessTrip")
 
-    vacation: Mapped[List["Vacation"]] = relationship(back_populates="vacations")
+    vacation: Mapped[List["Vacation"]] = relationship("Vacation")
 
 class EmployeeEmployeePosition(Base):
     __tablename__ = "employee__employee_positions"
@@ -109,7 +104,7 @@ class EmployeeTrip(Base):
     
     @declared_attr
     def employee(cls) -> Mapped[Employee]:
-        return relationship(back_populates="employees")
+        return relationship("Employee")
 
     start_date: Mapped[date] = mapped_column(Date, server_default=func.now())
 
