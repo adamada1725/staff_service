@@ -40,3 +40,28 @@ class Employee(EmployeeBase):
 class CreateEmployee(EmployeeBase):
     pass
 
+class UpdateEmployee(CreateEmployee):
+    pass
+
+class Country(BaseModel):
+    
+    id: int
+    
+    title: str
+
+class CreateCountry(BaseModel):
+    
+    title: str
+
+class UpdateCountry(CreateCountry):
+    pass
+
+class Department(BaseModel):
+    
+    id: int
+    
+    title: str
+
+class CreateDepartment(BaseModel):
+    
+    title: str
