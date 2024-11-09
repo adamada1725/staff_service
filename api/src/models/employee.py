@@ -69,7 +69,7 @@ class Employee(Base):
 
     login: Mapped[str] = mapped_column(String(32), unique=True)
 
-    password: Mapped[str] = mapped_column(String(32))
+    password: Mapped[str] = mapped_column(String(100))
 
     email: Mapped[Optional[str]] = mapped_column(String(64), unique=True)
 

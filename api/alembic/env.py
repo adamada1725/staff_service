@@ -4,10 +4,15 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+from alembic_utils.replaceable_entity import register_entities
 
 from src.config import settings
 from src.models import employee
 from src.database import Base
+
+from src.pg_utils import pgcrypto_ext, hash_password_function, hash_password_trigger
+
+register_entities([pgcrypto_ext, hash_password_function, hash_password_trigger])
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
