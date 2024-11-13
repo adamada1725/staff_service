@@ -27,7 +27,7 @@ hash_password_trigger = PGTrigger(
     schema="public",
     signature="hash_password_trigger",
     definition="""
-BEFORE INSERT OR UPDATE ON employees
+BEFORE INSERT OR UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION hash_password_function();
 """,

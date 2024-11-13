@@ -7,7 +7,7 @@ from alembic import context
 from alembic_utils.replaceable_entity import register_entities
 
 from src.config import settings
-from src.models import employee
+from src.app import models
 from src.base.database import Base
 
 from src.base.pg_utils import pgcrypto_ext, hash_password_function, hash_password_trigger
