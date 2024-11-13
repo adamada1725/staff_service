@@ -23,7 +23,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     login: Mapped[str] = mapped_column(String(32), nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String(100), nullable=False)
-    role_id: Mapped[int] = mapped_column(ForeignKey("role_types.id", ondelete="CASCADE"))
+    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id", ondelete="CASCADE", use_alter=True))
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     deleted_at: Mapped[datetime] = mapped_column(DateTime)
 
@@ -34,9 +34,9 @@ class User(Base):
 class Employee(Base):
     __tablename__ = "employees"
 
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
-    department_id: Mapped[int] = mapped_column(ForeignKey("departments.id", ondelete="CASCADE"))
-    employment_type_id: Mapped[int] = mapped_column(ForeignKey("employment_types.id", ondelete="CASCADE"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE", use_alter=True), primary_key=True)
+    department_id: Mapped[int] = mapped_column(ForeignKey("departments.id", ondelete="CASCADE", use_alter=True))
+    employment_type_id: Mapped[int] = mapped_column(ForeignKey("employment_types.id", ondelete="CASCADE", use_alter=True))
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     deleted_at: Mapped[datetime] = mapped_column(DateTime)
 
@@ -53,7 +53,7 @@ class Employee(Base):
 class PersonalInfo(Base):
     __tablename__ = "personal_info"
 
-    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE"), primary_key=True)
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE", use_alter=True), primary_key=True)
     first_name: Mapped[str] = mapped_column(String(64), nullable=False)
     last_name: Mapped[str] = mapped_column(String(64), nullable=False)
     middle_name: Mapped[str] = mapped_column(String(64))
@@ -66,7 +66,7 @@ class PersonalInfo(Base):
 class ContactInfo(Base):
     __tablename__ = "contact_info"
 
-    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE"), primary_key=True)
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE", use_alter=True), primary_key=True)
     email: Mapped[str] = mapped_column(String(64), unique=True)
     phone: Mapped[str] = mapped_column(String(16), unique=True)
     tg_id: Mapped[str] = mapped_column(String(64), unique=True)
@@ -79,7 +79,7 @@ class Department(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(64), nullable=False)
-    acting_head_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE"))
+    acting_head_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE", use_alter=True))
 
     employees: Mapped[list["Employee"]] = relationship("Employee", back_populates="department")
 
@@ -110,7 +110,7 @@ class EmployeePosition(Base):
 class EmployeeTrip(Base):
     __abstract__ = True
 
-    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id", ondelete="CASCADE"))
+    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE", use_alter=True))
     
     @declared_attr
     def employee(cls) -> Mapped[Employee]:
@@ -148,7 +148,7 @@ class Vacation(EmployeeTrip):
     __tablename__ = "vacations"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    vacation_type_id: Mapped[int] = mapped_column(ForeignKey("vacation_types.id", ondelete="CASCADE"))
+    vacation_type_id: Mapped[int] = mapped_column(ForeignKey("vacation_types.id", ondelete="CASCADE", use_alter=True))
 
     employee: Mapped["Employee"] = relationship("Employee", back_populates="vacations")
     vacation_type: Mapped["VacationType"] = relationship("VacationType")

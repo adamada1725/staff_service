@@ -31,7 +31,7 @@ BEFORE INSERT OR UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION hash_password_function();
 """,
-    on_entity="employees"
+    on_entity="users"
 )
 
 
