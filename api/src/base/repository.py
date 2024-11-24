@@ -1,15 +1,17 @@
+
 from typing import List, TypeVar, Type, Optional
 from abc import ABC, abstractmethod
 
 
-from domain.departments.schemas import Department as DepartmentSchema
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import BaseModel
 
 from base.database import Base
 
 M = TypeVar("M", bound=Base)
+S = TypeVar("S", bound=BaseModel)
 
 class AbstractRepository(ABC):
 
@@ -48,6 +50,7 @@ class BaseRepository(AbstractRepository):
                        session: AsyncSession,
                        order_by: str = "id", 
                        limit: int = 100,
+                       unique: bool = False,
                        **filters) -> Optional[List[M]]:
 
         stmt = (select(self.model)
@@ -57,21 +60,21 @@ class BaseRepository(AbstractRepository):
 
         result = await session.execute(stmt)
 
-        result = result.fetchall()
-
-        res = result[0][0]
-
-        res = DepartmentSchema.model_validate(res).model_dump_json(exclude=DepartmentSchema.title)
-
-        return res
+        return result.scalars().all()
 
     async def find_by_id(self, 
                          session: AsyncSession, 
                          id: int):
-        ...
 
-    async def save(self, session: AsyncSession):
-        ...
+        return await session.get_one(self.model, id)
+
+    async def save(self, session: AsyncSession, schema: S):
+        new_model = self.model(**schema.model_dump())
+        session.add(new_model)
+        await session.commit()
+        await session.refresh(new_model)
+
+        return new_model
 
     async def save_all(self, session: AsyncSession):
         ...
@@ -80,4 +83,14 @@ class BaseRepository(AbstractRepository):
         ...
 
     async def delete_by_id(self, session: AsyncSession, id: int):
-        ...
+        
+        model = await session.get_one(self.model, id)
+        await session.delete(model)
+        await session.commit()
+    
+    async def update_by_id(self, session: AsyncSession, id: int, schema: S):
+
+        stmt = update(self.model).where(self.model.id==id).values(**schema.model_dump())
+        
+        await session.execute(stmt)
+        await session.commit()

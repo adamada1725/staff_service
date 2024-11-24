@@ -10,9 +10,14 @@ from src.config import settings
 from src.base.database import Base
 from src.app.models import *
 
-from src.base.pg_utils import pgcrypto_ext, hash_password_function, hash_password_trigger
-
-register_entities([pgcrypto_ext, hash_password_function, hash_password_trigger])
+### Don't include functions and triggers during the first migration (do this afterwards) ###
+from src.base.pg_utils import (pgcrypto_ext, hash_password_function, 
+                               hash_password_trigger, hash_role_token_function, 
+                               hash_role_token_trigger)
+register_entities([pgcrypto_ext, hash_password_function, 
+                   hash_password_trigger, hash_role_token_function, 
+                   hash_role_token_trigger])
+### --- ###
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

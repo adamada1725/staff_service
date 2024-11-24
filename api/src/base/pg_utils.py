@@ -23,6 +23,22 @@ LANGUAGE plpgsql;
 """
 )
 
+hash_role_token_function = PGFunction(
+    schema="public",
+    signature="hash_role_token_function()",
+    definition=""" 
+RETURNS TRIGGER
+AS
+$$
+BEGIN
+NEW.token := crypt(NEW.token, gen_salt('bf'));
+RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+"""
+)
+
 hash_password_trigger = PGTrigger(
     schema="public",
     signature="hash_password_trigger",
@@ -32,6 +48,17 @@ FOR EACH ROW
 EXECUTE FUNCTION hash_password_function();
 """,
     on_entity="users"
+)
+
+hash_role_token_trigger = PGTrigger(
+    schema="public",
+    signature="hash_role_token_trigger",
+    definition="""
+BEFORE INSERT OR UPDATE ON roles
+FOR EACH ROW
+EXECUTE FUNCTION hash_role_token_function();
+""",
+    on_entity="roles"
 )
 
 
