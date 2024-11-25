@@ -5,7 +5,6 @@ from sqlalchemy import select, update
 from base.repository import AbstractRepository
 from app.models import Role
 from app.schemas.roles import CreateRole
-from app.schemas.roles import Role as RoleSchema
 
 class RoleRepository(AbstractRepository):
 

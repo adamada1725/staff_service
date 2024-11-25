@@ -1,5 +1,5 @@
-from typing import Annotated, List, Optional, Sequence
-from fastapi import Depends, Path, Query, Response, status
+from typing import Annotated
+from fastapi import Depends, Path, Response, status
 from fastapi.routing import APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound

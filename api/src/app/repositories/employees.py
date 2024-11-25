@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from app.models import Employee, PersonalInfo, ContactInfo
+from app.models import Employee
 from base.repository import BaseRepository
 
 M = TypeVar("M", bound=Employee)

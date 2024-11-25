@@ -1,8 +1,7 @@
 from typing import Annotated
-from fastapi import Depends, Path, Response, status
+from fastapi import Depends, Path
 from fastapi.routing import APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import NoResultFound
 
 from base.database import session_dependency
 from app.schemas.roles import CreateRole
