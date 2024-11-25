@@ -1,5 +1,10 @@
+import sys
+import asyncio
+
 from fastapi import FastAPI
 import uvicorn
+
+from base.database import truncate_all
 
 from app.routers.roles import router as roles_router
 from app.routers.users import users_router
@@ -26,4 +31,6 @@ app.include_router(business_trips_router)
 
 if __name__=="__main__":
 
+    if "-t" in sys.argv or "--truncate" in sys.argv:
+        asyncio.run(truncate_all())
     uvicorn.run("main:app", reload=True)

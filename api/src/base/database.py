@@ -35,3 +35,9 @@ async def session_dependency():
 
 class Base(DeclarativeBase):
     pass
+
+
+async def truncate_all():
+    async with engine.begin() as conn:
+        for table in reversed(Base.metadata.sorted_tables):
+            await conn.execute(table.delete())
