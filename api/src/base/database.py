@@ -1,5 +1,6 @@
 from asyncio import current_task
 
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (create_async_engine, async_sessionmaker, 
                                     async_scoped_session)
 from sqlalchemy.orm import DeclarativeBase
@@ -40,4 +41,4 @@ class Base(DeclarativeBase):
 async def truncate_all():
     async with engine.begin() as conn:
         for table in reversed(Base.metadata.sorted_tables):
-            await conn.execute(table.delete())
+            await conn.execute(text(f"TRUNCATE TABLE {table.name} RESTART IDENTITY CASCADE"))
