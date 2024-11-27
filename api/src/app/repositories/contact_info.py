@@ -9,8 +9,6 @@ class ContactInfoRepository(BaseRepository):
     async def save(self, session: AsyncSession, schema: CreateConctactInfo, employee_id):
         new_model = self.model(**schema.model_dump(), employee_id = employee_id)
         session.add(new_model)
-        await session.commit()
-        await session.refresh(new_model)
 
         return new_model
 

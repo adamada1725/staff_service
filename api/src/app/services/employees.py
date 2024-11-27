@@ -1,3 +1,4 @@
+from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.repositories.employees import employee_repository
@@ -14,8 +15,12 @@ class EmployeeService:
 
         e_id  = (await cls._repo.save(session, schema.base)).user_id
 
-        await personal_info_repository.save(session, schema.personal_info, e_id)
-        await contact_info_repository.save(session, schema.contact_info, e_id)
+        if schema.personal_info:
+            await personal_info_repository.save(session, schema.personal_info, e_id)
+        if schema.contact_info:
+            await contact_info_repository.save(session, schema.contact_info, e_id)
+        
+        await session.commit()
 
 
     @classmethod

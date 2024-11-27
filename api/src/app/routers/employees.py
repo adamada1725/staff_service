@@ -32,8 +32,6 @@ async def get_one_employee(employee_id: Annotated[int, Path(ge=1)],
 async def create_employee(employee_schema: CreateEmployee,
                           session: SessionDependency):
     
-    print(employee_schema)
-    
     return await EmployeeService.save(session, employee_schema)
 
 @employees_router.delete("/{employee_id}")
