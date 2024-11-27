@@ -28,7 +28,7 @@ async def session_dependency():
     sess = get_scoped_session()
     try:
         yield sess
-    except Exception as e:
+    except Exception:
         sess.rollback()
         raise
     finally:

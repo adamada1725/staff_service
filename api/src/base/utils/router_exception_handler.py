@@ -1,8 +1,9 @@
 from functools import wraps
-from typing import Callable
 
 from fastapi import Response, status
 from sqlalchemy.exc import NoResultFound
+
+from config import settings
 
 def handle_exceptions(func):
     
@@ -13,6 +14,9 @@ def handle_exceptions(func):
         except NoResultFound:
             return Response(status_code=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response(e, status_code=500)
+            if settings.ECHO:
+                return Response(str(e), status_code=500)
+            else:
+                return Response(status_code=500)
     
     return wrapper
