@@ -36,7 +36,7 @@ class Employee(Base):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE", use_alter=True), primary_key=True)
     department_id: Mapped[int] = mapped_column(ForeignKey("departments.id", ondelete="CASCADE", use_alter=True), nullable=True)
-    employment_type_id: Mapped[int] = mapped_column(ForeignKey("employment_types.id", ondelete="CASCADE", use_alter=True))
+    employment_type_id: Mapped[int] = mapped_column(ForeignKey("employment_types.id", ondelete="CASCADE", use_alter=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     deleted_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
@@ -64,9 +64,9 @@ class PersonalInfo(Base):
     employee_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE", use_alter=True), primary_key=True)
     first_name: Mapped[str] = mapped_column(String(64), nullable=False)
     last_name: Mapped[str] = mapped_column(String(64), nullable=False)
-    middle_name: Mapped[str] = mapped_column(String(64))
-    birthdate: Mapped[Date] = mapped_column(Date)
-    sex: Mapped[bool] = mapped_column(Boolean)
+    middle_name: Mapped[str] = mapped_column(String(64), nullable=True)
+    birthdate: Mapped[Date] = mapped_column(Date, nullable=True)
+    sex: Mapped[bool] = mapped_column(Boolean, nullable=True)
     country_id: Mapped[int] = mapped_column(ForeignKey("countries.id", ondelete="CASCADE", use_alter=True), nullable=True)
 
     employee: Mapped["Employee"] = relationship("Employee", back_populates="personal_info")
@@ -88,7 +88,7 @@ class Department(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(64), nullable=False)
-    acting_head_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE", use_alter=True))
+    acting_head_id: Mapped[int] = mapped_column(ForeignKey("employees.user_id", ondelete="CASCADE", use_alter=True), nullable=True)
 
     #employees: Mapped[list["Employee"]] = relationship("Employee", back_populates="department")
 
