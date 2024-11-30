@@ -13,7 +13,9 @@ class CreateUser(BaseSchema):
 
     role_id: int
 
-class UserSchema(CreateUser):
+class UserSchema(BaseSchema):
+
+    login: str = Field(min_length=4, max_length=32)
 
     id: int
 
