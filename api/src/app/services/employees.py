@@ -31,9 +31,9 @@ class EmployeeService:
         return response
 
     @classmethod
-    async def get_one(cls, session: AsyncSession, id: int):
+    async def get_one(cls, session: AsyncSession, id: int, full: bool):
 
-        response = await cls._repo.find_by_id(session, id)
+        response = await cls._repo.find_by_id(session, id, full=full)
 
         return response
     

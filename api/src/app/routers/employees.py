@@ -23,9 +23,10 @@ async def get_employees(session: SessionDependency,
 @employees_router.get("/{employee_id}")
 @handle_exceptions
 async def get_one_employee(employee_id: Annotated[int, Path(ge=1)],
-                           session: SessionDependency):
+                           session: SessionDependency,
+                           full: Annotated[bool, Query()] = True):
 
-    return await EmployeeService.get_one(session, employee_id)
+    return await EmployeeService.get_one(session, employee_id, full)
 
 @employees_router.post("")
 @handle_exceptions

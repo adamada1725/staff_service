@@ -35,5 +35,19 @@ class EmployeeRepository(BaseRepository):
         result = await session.execute(stmt)
 
         return result.scalars().all()
+    
+    async def find_by_id(self, 
+                         session: AsyncSession, 
+                         id: int, 
+                         full: bool) -> Optional[Employee]:
+        
+        stmt = select(self.model)
+        
+        if full:
+                stmt = stmt.options(joinedload(self.model.contact_info), joinedload(self.model.personal_info))
+        
+        result = await session.execute(stmt)
+
+        return result.scalars().one_or_none()
 
 employee_repository = EmployeeRepository()
