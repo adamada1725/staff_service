@@ -16,6 +16,11 @@ class Role(Base):
 
     users: Mapped[list["User"]] = relationship("User", back_populates="role")
 
+class Sex(Base):
+    __tablename__ = "sex"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(32), nullable=False)
 
 class User(Base):
     __tablename__ = "users"
@@ -66,7 +71,7 @@ class PersonalInfo(Base):
     last_name: Mapped[str] = mapped_column(String(64), nullable=False)
     middle_name: Mapped[str] = mapped_column(String(64), nullable=True)
     birthdate: Mapped[Date] = mapped_column(Date, nullable=True)
-    sex: Mapped[bool] = mapped_column(Boolean, nullable=True)
+    sex: Mapped[int] = mapped_column(ForeignKey("sex.id", ondelete="CASCADE", use_alter=True), nullable=True)
     country_id: Mapped[int] = mapped_column(ForeignKey("countries.id", ondelete="CASCADE", use_alter=True), nullable=True)
 
     employee: Mapped["Employee"] = relationship("Employee", back_populates="personal_info")
