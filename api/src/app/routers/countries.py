@@ -17,7 +17,7 @@ SessionDependency = Annotated[AsyncSession, Depends(session_dependency)]
 @handle_exceptions
 async def get_countries(session: SessionDependency):
 
-    return await country_repository.find_all(session)
+    return await country_repository.find_all(session, limit=300)
 
 @router.get("/{country_id}")
 @handle_exceptions
