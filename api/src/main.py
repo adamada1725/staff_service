@@ -5,7 +5,9 @@ from fastapi import FastAPI
 import uvicorn
 
 from base.database import truncate_all
+from base.seeders.seeders import BaseSeeder
 
+from app.routers.countries import router as country_router
 from app.routers.roles import router as roles_router
 from app.routers.users import users_router
 from app.routers.departments import departments_router
@@ -28,9 +30,19 @@ app.include_router(vacation_type_router)
 app.include_router(employees_router)
 app.include_router(vacations_router)
 app.include_router(business_trips_router)
+app.include_router(country_router)
+
+async def main(argv):
+
+    if "-t" in argv or "--truncate" in sys.argv:
+        await truncate_all()
+
+    if "-s" in argv or "--seed" in sys.argv:
+        await BaseSeeder.seed()
+
+    uvicorn.run("main:app", reload=True)
+
+    
 
 if __name__=="__main__":
-
-    if "-t" in sys.argv or "--truncate" in sys.argv:
-        asyncio.run(truncate_all())
-    uvicorn.run("main:app", reload=True)
+    asyncio.run(main(sys.argv))
