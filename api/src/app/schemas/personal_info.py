@@ -17,7 +17,7 @@ class CreatePersonalInfo(BaseSchema):
 
     country_id: Optional[int] = None
 
-    sex: Optional[bool] = None
+    sex: Optional[int] = None
 
 class PersonalInfo(BaseSchema):
 
@@ -31,7 +31,7 @@ class PersonalInfo(BaseSchema):
 
     country: Optional[Country] = None
 
-    sex: Optional[bool] = None
+    sex: Optional[int] = None
 
 class UpdatePersonalInfo(CreatePersonalInfo):
 
