@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 
 from pydantic import Field
 
@@ -21,7 +22,7 @@ class UserSchema(BaseSchema):
 
     created_at: datetime.datetime
 
-    deleted_at: datetime.datetime | None
+    deleted_at: Optional[datetime.datetime]
 
 class UpdateUser(CreateUser):
 

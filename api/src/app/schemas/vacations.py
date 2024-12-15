@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Optional
 
 from pydantic import Field
 from app.schemas.vacation_types import VacationType
@@ -26,7 +27,7 @@ class Vacation(BaseSchema):
 
     reason: str = Field(min_length=2, max_length=128)
 
-    deleted_at: date | None
+    deleted_at: Optional[date]
 
     vacation_type: VacationType
 

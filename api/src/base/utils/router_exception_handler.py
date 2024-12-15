@@ -14,7 +14,7 @@ def handle_exceptions(func):
         except NoResultFound:
             return Response(status_code=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            if settings.ECHO:
+            if settings.POSTGRES_ECHO:
                 return Response(str(e), status_code=500)
             else:
                 return Response(status_code=500)

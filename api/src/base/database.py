@@ -9,7 +9,7 @@ from config import settings
 
 engine = create_async_engine(
     url=settings.db_url,
-    echo=settings.ECHO
+    echo=settings.POSTGRES_ECHO
     )
 
 session_factory = async_sessionmaker(engine,

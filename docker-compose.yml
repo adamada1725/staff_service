@@ -1,0 +1,25 @@
+services:
+  api:
+    container_name: api_service
+    restart: unless-stopped
+    build: ./api
+    command: ["python3", "src/main.py"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/api
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres_service
+    restart: unless-stopped
+    image: postgres:14.8-alpine3.18
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./api/.env
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./postgres:/docker-entrypoint-initdb.d

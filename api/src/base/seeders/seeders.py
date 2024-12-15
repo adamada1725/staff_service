@@ -17,7 +17,7 @@ class BaseSeeder(AbstractSeeder):
 
     _seeder_JSON_file = "seeders_base.json"
     _dir = str(pathlib.Path(__file__).parent.resolve())
-    _seeder_JSON_path = f"{_dir}\\{_seeder_JSON_file}"
+    _seeder_JSON_path = f"{_dir}/{_seeder_JSON_file}"
 
     @classmethod
     def _parse_seeder_file(cls, path: str) -> Dict[str, List[Dict]]:
