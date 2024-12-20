@@ -40,7 +40,7 @@ async def main(argv):
     if "-s" in argv or "--seed" in sys.argv:
         await BaseSeeder.seed()
 
-    uvicorn.run("main:app", reload=True, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", reload=True, port=8000)
 
     
 
