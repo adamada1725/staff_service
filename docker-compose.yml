@@ -1,0 +1,29 @@
+services:
+  postgres:
+    container_name: postgres_service
+    restart: unless-stopped
+    image: postgres:14.8-alpine3.18
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./api/.env
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./postgres:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "psql", "-U", "User", "-d", "staff"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+  api:
+    container_name: api_service
+    restart: unless-stopped
+    build: ./api
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/api
+    depends_on:
+      postgres:
+        condition: service_healthy

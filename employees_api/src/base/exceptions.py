@@ -1,0 +1,2 @@
+class DatesIntersection(BaseException):
+    pass
