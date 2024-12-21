@@ -1,31 +1,14 @@
 from datetime import date
 from typing import Optional
 
-from pydantic import Field
 from app.schemas.vacation_types import VacationType
-from base.schema import BaseSchema
+from app.schemas.employee_trip import EmployeeTrip
 
-class CreateVacation(BaseSchema):
-
-    employee_id: int
-
-    start_date: date
-
-    end_date: date
-
-    reason: str = Field(min_length=2, max_length=128)
+class CreateVacation(EmployeeTrip):
 
     vacation_type_id: int
 
-class Vacation(BaseSchema):
-
-    id: int
-
-    start_date: date
-
-    end_date: date
-
-    reason: str = Field(min_length=2, max_length=128)
+class Vacation(EmployeeTrip):
 
     deleted_at: Optional[date]
 

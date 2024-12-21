@@ -1,28 +1,16 @@
 from datetime import date
+
 from pydantic import Field
-from base.schema import BaseSchema
 
-class CreateBusinessTrip(BaseSchema):
+from app.schemas.employee_trip import EmployeeTrip
 
-    employee_id: int
-
-    start_date: date
-
-    end_date: date
+class CreateBusinessTrip(EmployeeTrip):
 
     city: str = Field(min_length=2, max_length=32)
 
-    reason: str = Field(max_length=128)
-
-class BusinessTrip(BaseSchema):
-
-    start_date: date
-
-    end_date: date
+class BusinessTrip(EmployeeTrip):
 
     city: str = Field(min_length=2, max_length=32)
-
-    reason: str = Field(max_length=128)
 
     id: int
 
