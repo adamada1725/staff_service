@@ -1,4 +1,4 @@
-
+from functools import reduce
 from typing import List, TypeVar, Type, Optional
 from abc import ABC, abstractmethod
 
@@ -9,6 +9,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
 
 from base.database import Base
+
+from app.repositories.utils import is_dates_intersects
+from base.exceptions import DatesIntersection
 
 M = TypeVar("M", bound=Base)
 S = TypeVar("S", bound=BaseModel)
@@ -94,3 +97,22 @@ class BaseRepository(AbstractRepository):
         
         await session.execute(stmt)
         await session.commit()
+
+class BaseTripRepository(BaseRepository):
+
+    from app.models import BusinessTrip, Vacation
+    from app.schemas.employee_trip import EmployeeTrip
+
+    T = TypeVar("T", bound=EmployeeTrip)
+
+    _TRIP_MODELS: List[Type[M]] = [BusinessTrip, Vacation]
+
+    async def save(self, session: AsyncSession, schema: T) -> BusinessTrip:
+
+        if reduce(
+            lambda x, y: x or y,
+            [await is_dates_intersects(session, model, schema) for model in self._TRIP_MODELS]
+        ):
+                 raise DatesIntersection
+        
+        await super().save(session, schema)
