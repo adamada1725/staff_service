@@ -1,4 +1,4 @@
 from app.models import Vacation
-from base.repository import BaseRepository
+from base.repository import BaseTripRepository
 
-vacations_repository = BaseRepository(Vacation)
+vacations_repository = BaseTripRepository(Vacation)
