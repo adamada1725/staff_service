@@ -15,9 +15,7 @@ class BusinessTripsRepository(BaseRepository):
 
         if await is_dates_intersects(session,
                                      self.model,
-                                     start_date_to_check=schema.start_date,
-                                     end_date_to_check=schema.end_date,
-                                     employee_id=schema.employee_id):
+                                     trip_to_check=schema):
                  raise DatesIntersection
         
         await super().save(session, schema)
