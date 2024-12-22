@@ -25,7 +25,7 @@ def is_range_between(range_start: date, range_end: date, model: Type[M]):
 
 async def is_dates_intersects(session: AsyncSession,
                               model: Type[M],
-                              trip_to_check: Type[S]
+                              trip_to_check: S
                              ) -> bool:
 
         check_stmt = (select(model)
