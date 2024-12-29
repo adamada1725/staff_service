@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int
     POSTGRES_NAME: str
     POSTGRES_ECHO: bool
+
+    ROOT_PASSWORD: str
+    ADMIN_PASSWORD: str
+    PARTNER_PASSWORD: str
     
     @property
     def db_url(self):

@@ -6,6 +6,7 @@ import uvicorn
 
 from base.database import truncate_all
 from base.seeders.seeders import BaseSeeder
+from base.utils.security import RootDependency
 
 from app.routers.countries import router as country_router
 from app.routers.roles import router as roles_router
@@ -18,8 +19,7 @@ from app.routers.employees import employees_router
 from app.routers.vacations import vacations_router
 from app.routers.business_trips import business_trips_router
 
-
-app = FastAPI()
+app = FastAPI(dependencies=[RootDependency])
 
 app.include_router(roles_router)
 app.include_router(users_router)
