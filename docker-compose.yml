@@ -6,7 +6,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - ./api/.env
+      - ./postgres/.env
     volumes:
       - ./pgdata:/var/lib/postgresql/data
       - ./postgres:/docker-entrypoint-initdb.d
@@ -16,14 +16,25 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-  api:
-    container_name: api_service
+  employee_api:
+    container_name: employee_service
     restart: unless-stopped
-    build: ./api
+    build: ./employees_api
     ports:
-      - "8000:8000"
+      - "6542:6542"
     volumes:
-      - .:/api
+      - ./employees_api:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+  task_api:
+    container_name: task_service
+    restart: unless-stopped
+    build: ./task_api
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./task_api:/app
     depends_on:
       postgres:
         condition: service_healthy

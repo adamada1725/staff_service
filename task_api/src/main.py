@@ -14,7 +14,7 @@ for r in routers:
 
 async def main(argv):
 
-    uvicorn.run("main:app", reload=True, port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", reload=True, port=4000)
 
     
 
